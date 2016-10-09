@@ -16,6 +16,9 @@ class CacheableKdtree::LatitudeLongitudeTree
                    end
     nearest_nodes(bounding_box)
   end
+  def nearest(lat, long, distance, units = :miles)
+    closest(lat, long, distance, units = :miles).map{|node| [node.data, CacheableKdtree::Util.distance_miles(lat, long, node.latitude, node.longitude)]}
+  end
 
   private
 
