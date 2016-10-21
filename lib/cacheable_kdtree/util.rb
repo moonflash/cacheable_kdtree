@@ -5,6 +5,10 @@ class CacheableKdtree::Util
   # I pulled the algorithm for the bounding_box calculation from here:
   # http://stackoverflow.com/questions/1689096/calculating-bounding-box-a-certain-distance-away-from-a-lat-long-coordinate-in-j
 
+  def self.bounding_box_degrees(lat, long, distance_in_degrees)
+    # bounding_box(lat, long, distance_in_degrees, earth_miles)
+    CacheableKdtree::LatitudeLongitudeRegion.new(lat - distance_in_degrees/2 , long - distance_in_degrees/2, lat + distance_in_degrees/2, long + distance_in_degrees/2)
+  end
   def self.bounding_box_miles(lat, long, distance_in_miles)
     bounding_box(lat, long, distance_in_miles, earth_miles)
   end

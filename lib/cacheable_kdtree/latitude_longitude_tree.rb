@@ -8,16 +8,18 @@ class CacheableKdtree::LatitudeLongitudeTree
 
   def closest(lat, long, distance, units = :miles)
     fail 'Input must be numeric.' unless lat.is_a?(Numeric) && long.is_a?(Numeric) && distance.is_a?(Numeric)
-    fail 'Units must be either :kilometers or :miles.' unless %i(miles kilometers).include?(units)
+    fail 'Units must be either :degrees, :kilometers or :miles.' unless %i(miles kilometers degrees).include?(units)
     bounding_box = if units == :miles
                      CacheableKdtree::Util.bounding_box_miles(lat, long, distance)
-                   else
+                   elsif units == :kilometers
                      CacheableKdtree::Util.bounding_box_kilometers(lat, long, distance)
+                   else
+                     CacheableKdtree::Util.bounding_box_degrees(lat, long, distance)
                    end
     nearest_nodes(bounding_box)
   end
-  def nearest(lat, long, distance, units = :miles)
-    closest(lat, long, distance, units = :miles).map{|node| [node.data, CacheableKdtree::Util.distance_miles(lat, long, node.latitude, node.longitude)]}
+  def nearest(lat, long, distance, units = :degrees)
+    closest(lat, long, distance, units).map{|node| [node.data, CacheableKdtree::Util.distance_miles(lat, long, node.latitude, node.longitude)]}
   end
 
   private
